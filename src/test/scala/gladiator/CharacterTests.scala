@@ -15,4 +15,9 @@ class CharacterTests extends FunSuite with ShouldMatchers {
     character.alignment should be (Character.Alignment.Good)
   }
 
+  test("A Character's armorClass should default to 10") {
+    val character = new Character(name = "Bobby")
+    character.armorClass should be (10)
+  }
+
 }
