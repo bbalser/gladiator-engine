@@ -6,8 +6,13 @@ import org.scalatest.matchers.ShouldMatchers
 class CharacterTests extends FunSuite with ShouldMatchers {
 
   test("A Character can get and set a name") {
-    val character = new Character("Bob the Wombat")
+    val character = new Character(name = "Bob the Wombat")
     character.name should be ("Bob the Wombat")
+  }
+
+  test("A Character can get and set an alignment") {
+    val character = new Character(name = "John", alignment = Character.Alignment.Good)
+    character.alignment should be (Character.Alignment.Good)
   }
 
 }
