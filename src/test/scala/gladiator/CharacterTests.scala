@@ -20,4 +20,9 @@ class CharacterTests extends FunSuite with ShouldMatchers {
     character.armorClass should be (10)
   }
 
+  test("A character's hit points should default to 5") {
+    val character = new Character(name = "Rumplestiltskin")
+    character.hitPoints should be (5)
+  }
+
 }
