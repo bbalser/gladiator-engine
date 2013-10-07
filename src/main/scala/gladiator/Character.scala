@@ -5,6 +5,11 @@ class Character(val name: String,
                 val armorClass:Int = 10,
                 val hitPoints: Int = 5) {
 
+  def attack(defender: Character): Attack = {
+    Attack(this, defender)
+  }
+
+
 }
 
 object Character {
