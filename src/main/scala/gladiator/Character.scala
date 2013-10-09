@@ -10,6 +10,9 @@ class Character(val name: String,
     (this, defender.applyDamageFromAttack(attack), attack)
   }
 
+  def isAlive: Boolean = {
+    hitPoints > 0
+  }
 
   private def applyDamageFromAttack(attack: Attack): Character = {
     if (attack.isHit) {

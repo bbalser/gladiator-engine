@@ -48,4 +48,15 @@ class CharacterTests extends FunSuite with ShouldMatchers {
     newAbel.hitPoints should be (3)
   }
 
+  test("When character hitPoints are zero, character is dead") {
+    val cain = new Character(name = "Cain", hitPoints = 0)
+    cain.isAlive should be (false)
+  }
+
+  test("When character hitPoints are greater than zero, character is alive") {
+    val cain = new Character(name = "Cain", hitPoints = 1)
+    cain.isAlive should be (true)
+  }
+
+
 }
