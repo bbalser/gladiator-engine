@@ -25,11 +25,20 @@ class CharacterTests extends FunSuite with ShouldMatchers {
     character.hitPoints should be (5)
   }
 
-  test("A character can attack another character") {
+  test("A character can attack another character and a hit will remove not hitpoints from defender if not a hit") {
+    val cain = new Character(name = "Cain")
+    val abel = new Character(name = "Abel")
+
+    val (newCain, newAbel, attack) = cain.attack(abel, 9)
+    newAbel.hitPoints should be (5)
+  }
+
+  test("A character can attack another character and a hit will remove hitpoints from defender") {
     val cain = new Character(name = "Cain")
     val abel = new Character(name = "Abel")
 
     val (newCain, newAbel, attack) = cain.attack(abel, 10)
+    newAbel.hitPoints should be (4)
   }
 
 }

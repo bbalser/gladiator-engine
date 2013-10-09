@@ -6,6 +6,10 @@ class Attack(val attacker: Character, val defender: Character, val roll: Int) {
     roll >= defender.armorClass
   }
 
+  def damage: Int = {
+    1
+  }
+
 }
 
 object Attack {

@@ -29,7 +29,10 @@ class AttackTests extends FunSuite with ShouldMatchers {
     Attack(cain,abel,roll).isHit should be (false)
   }
 
-
+  test("damage should return 1 hit point") {
+    val attack = Attack(new Character(name = "one"), new Character(name = "two"), 10)
+    attack.damage should be (1)
+  }
 
 
 }

@@ -6,9 +6,25 @@ class Character(val name: String,
                 val hitPoints: Int = 5) {
 
   def attack(defender: Character, roll: Int): (Character, Character, Attack) = {
-    (this, defender, Attack(this, defender, roll))
+    val attack = Attack(this, defender, roll)
+    (this, defender.applyDamageFromAttack(attack), attack)
   }
 
+
+  private def applyDamageFromAttack(attack: Attack): Character = {
+    if (attack.isHit) {
+      copy(hitPoints = hitPoints - attack.damage)
+    } else {
+      this
+    }
+  }
+
+  private def copy(name: String = this.name,
+                   alignment: Character.Alignment = this.alignment,
+                   armorClass: Int = this.armorClass,
+                   hitPoints: Int = this.hitPoints): Character = {
+    new Character(name, alignment, armorClass, hitPoints)
+  }
 
 }
 
