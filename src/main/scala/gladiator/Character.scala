@@ -5,8 +5,8 @@ class Character(val name: String,
                 val armorClass:Int = 10,
                 val hitPoints: Int = 5) {
 
-  def attack(defender: Character, roll: Int): Attack = {
-    Attack(this, defender, roll)
+  def attack(defender: Character, roll: Int): (Character, Character, Attack) = {
+    (this, defender, Attack(this, defender, roll))
   }
 
 

@@ -29,10 +29,7 @@ class CharacterTests extends FunSuite with ShouldMatchers {
     val cain = new Character(name = "Cain")
     val abel = new Character(name = "Abel")
 
-    val attack = cain.attack(abel, 10)
-    attack.attacker should be (cain)
-    attack.defender should be (abel)
-    attack.roll should be (10)
+    val (newCain, newAbel, attack) = cain.attack(abel, 10)
   }
 
 }
