@@ -41,4 +41,11 @@ class CharacterTests extends FunSuite with ShouldMatchers {
     newAbel.hitPoints should be (4)
   }
 
+  test("When an attacker successfully attacks a defender and roll's a natural 20, double damage is dealt") {
+    val cain = new Character(name = "Cain")
+    val abel = new Character(name = "Abel")
+    val (newCain, newAbel, attack) = cain.attack(abel, 20)
+    newAbel.hitPoints should be (3)
+  }
+
 }
