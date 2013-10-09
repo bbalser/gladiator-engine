@@ -13,4 +13,23 @@ class AttackTests extends FunSuite with ShouldMatchers {
     Attack(cain,abel,roll).isHit should be (true)
   }
 
+  test("isHit should return true if roll beats defender's armorClass") {
+    val cain = new Character(name = "Cain")
+    val abel = new Character(name = "Abel")
+    val roll = 11
+
+    Attack(cain,abel,roll).isHit should be (true)
+  }
+
+  test("isHist should return false if roll less than defender's armorClass") {
+    val cain = new Character(name = "Cain")
+    val abel = new Character(name = "Abel")
+    val roll = 9
+
+    Attack(cain,abel,roll).isHit should be (false)
+
+  }
+
+
+
 }
