@@ -2,6 +2,7 @@ package gladiator
 
 import org.scalatest.FunSuite
 import org.scalatest.matchers.ShouldMatchers
+import gladiator.Ability.Strength
 
 class CharacterTests extends FunSuite with ShouldMatchers {
 
@@ -58,5 +59,14 @@ class CharacterTests extends FunSuite with ShouldMatchers {
     cain.isAlive should be (true)
   }
 
+  test("A Character has abilities") {
+    val cain = new Character(name = "Cain", abilities = Map(Ability.Strength -> Ability(8), Ability.Dexterity -> Ability(12)))
+    cain.ability(Ability.Strength) should be (Ability(8))
+  }
+
+  test("A Character has default abilities of 10") {
+    val cain = new Character(name = "Cain")
+    cain.ability(Ability.Strength) should be (Ability())
+  }
 
 }
