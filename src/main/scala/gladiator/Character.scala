@@ -4,7 +4,8 @@ class Character(val name: String,
                 val alignment: Character.Alignment,
                 val armorClass: Int,
                 val hitPoints: Int,
-                val abilities: Map[Ability.Category, Ability]) {
+                val abilities: Map[Ability.Category, Ability],
+                val experiencePoints: Int) {
 
   def attack(defender: Character, roll: Int): (Character, Character, Attack) = {
     val attack = Attack(this, defender, roll)
@@ -19,6 +20,9 @@ class Character(val name: String,
 
   def maxHitPoints: Int = Character.maxHitPoints(abilities)
 
+  def applyExperiencePoints(points: Int) = {
+    copy(experiencePoints = experiencePoints + points)
+  }
 
   private def applyDamage(attack: Attack): Character = {
     if (attack.isHit) {
@@ -32,8 +36,9 @@ class Character(val name: String,
                    alignment: Character.Alignment = this.alignment,
                    armorClass: Int = this.armorClass,
                    hitPoints: Int = this.hitPoints,
-                   abilities: Map[Ability.Category, Ability] = this.abilities): Character = {
-    new Character(name, alignment, armorClass, hitPoints, abilities)
+                   abilities: Map[Ability.Category, Ability] = this.abilities,
+                   experiencePoints: Int = this.experiencePoints): Character = {
+    new Character(name, alignment, armorClass, hitPoints, abilities, experiencePoints)
   }
 
 }
@@ -44,8 +49,9 @@ object Character {
             alignment: Character.Alignment = Character.Alignment.Neutral,
             armorClass: Int = 10,
             hitPoints: Option[Int] = None,
-            abilities: Map[Ability.Category, Ability] = Map()): Character = {
-    new Character(name, alignment, armorClass, hitPoints.getOrElse(maxHitPoints(abilities)), abilities)
+            abilities: Map[Ability.Category, Ability] = Map(),
+            experiencePoints: Int = 0): Character = {
+    new Character(name, alignment, armorClass, hitPoints.getOrElse(maxHitPoints(abilities)), abilities, experiencePoints)
   }
 
   private def maxHitPoints(abilities: Map[Ability.Category, Ability]): Int = {

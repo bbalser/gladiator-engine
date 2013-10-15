@@ -80,4 +80,20 @@ class CharacterTests extends FunSuite with ShouldMatchers {
     cain.maxHitPoints should be (1)
   }
 
+  test("A Character has experiencePoints") {
+    val cain = Character(name = "cain", experiencePoints = 111)
+    cain.experiencePoints should be (111)
+  }
+
+  test("A Character has default experience points of 0") {
+    val cain = Character(name = "cain")
+    cain.experiencePoints should be (0)
+  }
+
+  test("A Character can have experience points applied to the character") {
+    val cain = Character(name = "cain", experiencePoints = 150)
+    val newCain = cain.applyExperiencePoints(1000)
+    newCain.experiencePoints should be (1150)
+  }
+
 }
