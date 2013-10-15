@@ -6,33 +6,68 @@ import org.scalatest.FunSuite
 class AttackTests extends FunSuite with ShouldMatchers {
 
   test("isHit should return true if roll meets defender's armorClass") {
-    val cain = new Character(name = "Cain")
-    val abel = new Character(name = "Abel")
+    val cain = Character(name = "Cain")
+    val abel = Character(name = "Abel")
     val roll = 10
 
     Attack(cain,abel,roll).isHit should be (true)
   }
 
   test("isHit should return true if roll beats defender's armorClass") {
-    val cain = new Character(name = "Cain")
-    val abel = new Character(name = "Abel")
+    val cain = Character(name = "Cain")
+    val abel = Character(name = "Abel")
     val roll = 11
 
     Attack(cain,abel,roll).isHit should be (true)
   }
 
   test("isHit should return false if roll less than defender's armorClass") {
-    val cain = new Character(name = "Cain")
-    val abel = new Character(name = "Abel")
+    val cain = Character(name = "Cain")
+    val abel = Character(name = "Abel")
     val roll = 9
 
     Attack(cain,abel,roll).isHit should be (false)
   }
 
   test("damage should return 1 hit point") {
-    val attack = Attack(new Character(name = "one"), new Character(name = "two"), 10)
+    val attack = Attack(Character(name = "one"), Character(name = "two"), 10)
     attack.damage should be (1)
   }
+
+  test("strength should be added to attack roll and damage dealt") {
+    val attack = Attack(Character(name = "one", abilities = Map(Ability.Strength -> Ability(12))), Character(name = "two"), 9)
+    attack.isHit should be (true)
+    attack.damage should be (2)
+  }
+
+  test("strength should be doubled and added to attack roll and damage dealt when critical hit") {
+    val attack = Attack(Character(name = "one", abilities = Map(Ability.Strength -> Ability(12))), Character(name = "two"), 20)
+    attack.isHit should be (true)
+    attack.damage should be (4)
+  }
+
+  test("natural 20 always hits regardless of armor class") {
+    val attack = Attack(Character(name = "one"), Character(name = "two", armorClass = 25), 20)
+    attack.isHit should be (true)
+  }
+
+  test("minimum damage is always 1") {
+    val attack = Attack(Character(name = "one", abilities = Map(Ability.Strength -> Ability(1))), Character(name = "two", armorClass = 1), 10)
+    attack.damage should be (1)
+  }
+
+  test("minimum damage is always 1 even for critical") {
+    val attack = Attack(Character(name = "one", abilities = Map(Ability.Strength -> Ability(1))), Character(name = "two", armorClass = 1), 20)
+    attack.damage should be (1)
+  }
+
+  test("dexterity modifier should be added to defender's armor class") {
+    val attacker = Character(name = "one")
+    val defender = Character(name = "two", abilities = Map(Ability.Dexterity -> Ability(12)))
+    val attack = Attack(attacker, defender, 10)
+    attack.isHit should be (false)
+  }
+
 
 
 }
