@@ -18,14 +18,18 @@ class Character(val name: String,
     hitPoints > 0
   }
 
-  def ability(category: Ability.Category): Ability = abilities.getOrElse(category, Ability())
+  def ability(category: Ability.Category): Ability = Character.ability(abilities, category)
 
-  def level: Int = ((1 + sqrt(experiencePoints/125.0 + 1.0)) / 2.0).floor.toInt.min(20)
+  def level: Int = Character.determineLevel(experiencePoints)
 
-  def maxHitPoints: Int = Character.maxHitPoints(abilities)
+  def maxHitPoints: Int = Character.maxHitPoints(abilities, experiencePoints)
 
-  def applyExperiencePoints(points: Int) = {
+  def addExperiencePoints(points: Int): Character = {
     copy(experiencePoints = experiencePoints + points)
+  }
+
+  def setExperiencePoints(points: Int): Character = {
+    copy(experiencePoints = points)
   }
 
   private def applyDamage(attack: Attack): Character = {
@@ -55,12 +59,19 @@ object Character {
             hitPoints: Option[Int] = None,
             abilities: Map[Ability.Category, Ability] = Map(),
             experiencePoints: Int = 0): Character = {
-    new Character(name, alignment, armorClass, hitPoints.getOrElse(maxHitPoints(abilities)), abilities, experiencePoints)
+    new Character(name, alignment, armorClass, hitPoints.getOrElse(maxHitPoints(abilities, experiencePoints)), abilities, experiencePoints)
   }
 
-  private def maxHitPoints(abilities: Map[Ability.Category, Ability]): Int = {
-    (5 + abilities.getOrElse(Ability.Constitution, Ability()).modifier).max(1)
+  private def maxHitPoints(abilities: Map[Ability.Category, Ability], experiencePoints: Int): Int = {
+    ((5 + ability(abilities, Ability.Constitution).modifier) * determineLevel(experiencePoints)).max(1)
   }
+
+  private def determineLevel(experiencePoints: Int) = ((1 + sqrt(experiencePoints/125.0 + 1.0)) / 2.0).floor.toInt.min(20)
+
+  private def ability(abilities: Map[Ability.Category, Ability], category: Ability.Category): Ability = abilities.getOrElse(category, Ability())
+
+  val Levels = Map( (1 -> 0), (2, 1000), (3 -> 3000), (4 -> 6000), (5 -> 10000), (6 -> 15000), (7 -> 21000), (8 -> 28000), (9 -> 36000), (10 -> 45000),
+    (11 -> 55000), (12 -> 66000), (13 -> 78000), (14 -> 91000), (15 -> 105000), (16 -> 120000), (17 -> 136000), (18 -> 153000), (19 -> 171000), (20 -> 190000))
 
   class Alignment
   object Alignment {

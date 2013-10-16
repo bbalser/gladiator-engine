@@ -68,6 +68,17 @@ class AttackTests extends FunSuite with ShouldMatchers {
     attack.isHit should be (false)
   }
 
+  test("1 is added to attack roll for every even level of attacking character") {
+    val cain = Character(name = "cain", experiencePoints = Character.Levels(2))
+    val abel = Character(name = "abel")
+    val attack = Attack(cain, abel, 9)
+    attack.attackRoll should be (10)
+
+    val newCain = cain.setExperiencePoints(Character.Levels(5))
+    val attack2 = Attack(newCain, abel, 8)
+    attack2.attackRoll should be (10)
+  }
+
 
 
 }

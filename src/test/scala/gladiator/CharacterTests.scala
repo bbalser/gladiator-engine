@@ -92,7 +92,7 @@ class CharacterTests extends FunSuite with ShouldMatchers {
 
   test("A Character can have experience points applied to the character") {
     val cain = Character(name = "cain", experiencePoints = 150)
-    val newCain = cain.applyExperiencePoints(1000)
+    val newCain = cain.addExperiencePoints(1000)
     newCain.experiencePoints should be (1150)
   }
 
@@ -106,7 +106,7 @@ class CharacterTests extends FunSuite with ShouldMatchers {
       (11, 55000), (12, 66000), (13, 78000), (14, 91000), (15, 105000), (16, 120000), (17, 136000), (18, 153000), (19, 171000), (20, 190000))
     levels.foreach { case (level, xp) =>
       val cain = Character(name = "cain")
-      val newCain = cain.applyExperiencePoints(xp - cain.experiencePoints)
+      val newCain = cain.addExperiencePoints(xp - cain.experiencePoints)
       newCain.level should be (level)
     }
   }
@@ -116,6 +116,19 @@ class CharacterTests extends FunSuite with ShouldMatchers {
     cain.level should be (20)
   }
 
+  test("A Character's max hit points increase by 5 plus constitution modifier per level") {
+    val cain = Character(name = "cain", abilities = Map(Ability.Constitution -> Ability(14)))
+    cain.maxHitPoints should be (7)
+    val newCain = cain.addExperiencePoints(10000)
+    newCain.maxHitPoints should be (35)
+  }
 
+  test("A Character's experience points should be able to be set") {
+    val cain = Character(name = "cain", experiencePoints = Character.Levels(9))
+    cain.experiencePoints should be (Character.Levels(9))
+    val newCain = cain.setExperiencePoints(Character.Levels(2))
+    newCain.experiencePoints should be (Character.Levels(2))
+
+  }
 
 }

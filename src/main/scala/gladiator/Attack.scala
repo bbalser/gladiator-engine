@@ -3,7 +3,7 @@ package gladiator
 class Attack(val attacker: Character, val defender: Character, val roll: Int) {
 
   def isHit: Boolean = {
-    if (roll == Attack.NATURAL_TWENTY) true else determineAttackRoll >= determineArmorClass
+    if (roll == Attack.NATURAL_TWENTY) true else attackRoll >= armorClass
   }
 
   def damage: Int = {
@@ -15,11 +15,11 @@ class Attack(val attacker: Character, val defender: Character, val roll: Int) {
     Attack.DEFAULT_DAMAGE + attacker.ability(Ability.Strength).modifier
   }
 
-  private def determineAttackRoll: Int = {
-    roll + attacker.ability(Ability.Strength).modifier
+  def attackRoll: Int = {
+    roll + attacker.ability(Ability.Strength).modifier + (attacker.level/2)
   }
 
-  private def determineArmorClass: Int = {
+  def armorClass: Int = {
     defender.armorClass + defender.ability(Ability.Dexterity).modifier
   }
 
