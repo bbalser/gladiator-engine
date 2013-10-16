@@ -1,5 +1,7 @@
 package gladiator
 
+import scala.math.sqrt
+
 class Character(val name: String,
                 val alignment: Character.Alignment,
                 val armorClass: Int,
@@ -17,6 +19,8 @@ class Character(val name: String,
   }
 
   def ability(category: Ability.Category): Ability = abilities.getOrElse(category, Ability())
+
+  def level: Int = ((1 + sqrt(experiencePoints/125.0 + 1.0)) / 2.0).floor.toInt.min(20)
 
   def maxHitPoints: Int = Character.maxHitPoints(abilities)
 

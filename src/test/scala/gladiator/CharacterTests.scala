@@ -96,4 +96,26 @@ class CharacterTests extends FunSuite with ShouldMatchers {
     newCain.experiencePoints should be (1150)
   }
 
+  test("A Character's default level is 1") {
+    val cain = Character(name = "cain")
+    cain.level should be (1)
+  }
+
+  test("Test all character levels") {
+    val levels = List( (2, 1000), (3, 3000), (4, 6000), (5, 10000), (6, 15000), (7, 21000), (8, 28000), (9, 36000), (10, 45000),
+      (11, 55000), (12, 66000), (13, 78000), (14, 91000), (15, 105000), (16, 120000), (17, 136000), (18, 153000), (19, 171000), (20, 190000))
+    levels.foreach { case (level, xp) =>
+      val cain = Character(name = "cain")
+      val newCain = cain.applyExperiencePoints(xp - cain.experiencePoints)
+      newCain.level should be (level)
+    }
+  }
+
+  test("A Character can go no hire than level 20") {
+    val cain = Character(name = "cain", experiencePoints = 300000)
+    cain.level should be (20)
+  }
+
+
+
 }
