@@ -9,7 +9,7 @@ class Attack(val attacker: Character, val defender: Character, val roll: Int) {
   }
 
   def damage: Int = {
-    def criticalModifier = if (roll == Attack.NATURAL_TWENTY) 2 else 1
+    def criticalModifier = if (roll == Attack.NATURAL_TWENTY) attacker.characterClass.criticalHitModifier else 1
     (criticalModifier * baseDamage).max(1)
   }
 
@@ -22,14 +22,14 @@ class Attack(val attacker: Character, val defender: Character, val roll: Int) {
   }
 
   def armorClass: Int = {
-    defender.armorClass + defender.ability(Ability.Dexterity).modifier
+    defender.armorClass + defender.ability(Ability.Dexterity).modifier +
+      Modifiers.armorClassModifiers(List(attacker.characterClass), defender)
   }
 
 
   private def attackRollModifiers: Int = {
     Modifiers.attackRollModifiers(List(attacker.characterClass), attacker, defender)
   }
-
 
 }
 
