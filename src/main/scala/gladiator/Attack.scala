@@ -1,5 +1,7 @@
 package gladiator
 
+import gladiator.modifiers.{Modifiers, AttackRollModifier}
+
 class Attack(val attacker: Character, val defender: Character, val roll: Int) {
 
   def isHit: Boolean = {
@@ -16,12 +18,18 @@ class Attack(val attacker: Character, val defender: Character, val roll: Int) {
   }
 
   def attackRoll: Int = {
-    roll + attacker.ability(Ability.Strength).modifier + (attacker.level/2)
+    roll + attacker.ability(Ability.Strength).modifier + (attacker.level/2) + attackRollModifiers
   }
 
   def armorClass: Int = {
     defender.armorClass + defender.ability(Ability.Dexterity).modifier
   }
+
+
+  private def attackRollModifiers: Int = {
+    Modifiers.attackRollModifiers(List(attacker.characterClass), attacker, defender)
+  }
+
 
 }
 

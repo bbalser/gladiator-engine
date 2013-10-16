@@ -22,7 +22,7 @@ class CharacterTests extends FunSuite with ShouldMatchers {
 
   test("A character's hit points should default to 5") {
     val character = Character(name = "Rumplestiltskin")
-    character.hitPoints should be (5)
+    character.currentHitPoints should be (5)
     character.maxHitPoints should be (5)
   }
 
@@ -31,7 +31,7 @@ class CharacterTests extends FunSuite with ShouldMatchers {
     val abel = Character(name = "Abel")
 
     val (newCain, newAbel, attack) = cain.attack(abel, 9)
-    newAbel.hitPoints should be (5)
+    newAbel.currentHitPoints should be (5)
   }
 
   test("A character can attack another character and a hit will remove hitpoints from defender") {
@@ -39,14 +39,14 @@ class CharacterTests extends FunSuite with ShouldMatchers {
     val abel = Character(name = "Abel")
 
     val (newCain, newAbel, attack) = cain.attack(abel, 10)
-    newAbel.hitPoints should be (4)
+    newAbel.currentHitPoints should be (4)
   }
 
   test("When an attacker successfully attacks a defender and roll's a natural 20, double damage is dealt") {
     val cain = Character(name = "Cain")
     val abel = Character(name = "Abel")
     val (newCain, newAbel, attack) = cain.attack(abel, 20)
-    newAbel.hitPoints should be (3)
+    newAbel.currentHitPoints should be (3)
   }
 
   test("When character hitPoints are zero, character is dead") {
@@ -71,7 +71,7 @@ class CharacterTests extends FunSuite with ShouldMatchers {
 
   test("A Character should include constitution modifier into maxHitPoints and defaultHitPoints") {
     val cain = Character(name = "Cain", abilities = Map(Ability.Constitution -> Ability(12)))
-    cain.hitPoints should be (6)
+    cain.currentHitPoints should be (6)
     cain.maxHitPoints should be (6)
   }
 

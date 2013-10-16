@@ -1,13 +1,17 @@
 package gladiator
 
 import scala.math.sqrt
+import gladiator.modifiers.{Modifiers, HitPointModifier}
 
 class Character(val name: String,
                 val alignment: Character.Alignment,
                 val armorClass: Int,
-                val hitPoints: Int,
+                val hitPoints: Option[Int],
                 val abilities: Map[Ability.Category, Ability],
-                val experiencePoints: Int) {
+                val experiencePoints: Int,
+                val characterClass: Character.Class) {
+
+  def currentHitPoints: Int = hitPoints.getOrElse(maxHitPoints)
 
   def attack(defender: Character, roll: Int): (Character, Character, Attack) = {
     val attack = Attack(this, defender, roll)
@@ -15,14 +19,16 @@ class Character(val name: String,
   }
 
   def isAlive: Boolean = {
-    hitPoints > 0
+    currentHitPoints > 0
   }
 
-  def ability(category: Ability.Category): Ability = Character.ability(abilities, category)
+  def ability(category: Ability.Category): Ability = abilities.getOrElse(category, Ability())
 
-  def level: Int = Character.determineLevel(experiencePoints)
+  def level: Int = ((1 + sqrt(experiencePoints/125.0 + 1.0)) / 2.0).floor.toInt.min(20)
 
-  def maxHitPoints: Int = Character.maxHitPoints(abilities, experiencePoints)
+  def maxHitPoints: Int = {
+    ( ((5 + ability(Ability.Constitution).modifier) * level) + hitPointModifiers ).max(1)
+  }
 
   def addExperiencePoints(points: Int): Character = {
     copy(experiencePoints = experiencePoints + points)
@@ -32,9 +38,13 @@ class Character(val name: String,
     copy(experiencePoints = points)
   }
 
+  private def hitPointModifiers: Int = {
+    Modifiers.hitPointModifiers(List(characterClass), this)
+  }
+
   private def applyDamage(attack: Attack): Character = {
     if (attack.isHit) {
-      copy(hitPoints = hitPoints - attack.damage)
+      copy(hitPoints = currentHitPoints - attack.damage)
     } else {
       this
     }
@@ -43,10 +53,10 @@ class Character(val name: String,
   private def copy(name: String = this.name,
                    alignment: Character.Alignment = this.alignment,
                    armorClass: Int = this.armorClass,
-                   hitPoints: Int = this.hitPoints,
+                   hitPoints: Int = this.currentHitPoints,
                    abilities: Map[Ability.Category, Ability] = this.abilities,
                    experiencePoints: Int = this.experiencePoints): Character = {
-    new Character(name, alignment, armorClass, hitPoints, abilities, experiencePoints)
+    new Character(name, alignment, armorClass, Some(hitPoints), abilities, experiencePoints, this.characterClass)
   }
 
 }
@@ -58,20 +68,16 @@ object Character {
             armorClass: Int = 10,
             hitPoints: Option[Int] = None,
             abilities: Map[Ability.Category, Ability] = Map(),
-            experiencePoints: Int = 0): Character = {
-    new Character(name, alignment, armorClass, hitPoints.getOrElse(maxHitPoints(abilities, experiencePoints)), abilities, experiencePoints)
+            experiencePoints: Int = 0,
+            characterClass: Character.Class = DefaultClass): Character = {
+    new Character(name, alignment, armorClass, hitPoints, abilities, experiencePoints, characterClass)
   }
-
-  private def maxHitPoints(abilities: Map[Ability.Category, Ability], experiencePoints: Int): Int = {
-    ((5 + ability(abilities, Ability.Constitution).modifier) * determineLevel(experiencePoints)).max(1)
-  }
-
-  private def determineLevel(experiencePoints: Int) = ((1 + sqrt(experiencePoints/125.0 + 1.0)) / 2.0).floor.toInt.min(20)
-
-  private def ability(abilities: Map[Ability.Category, Ability], category: Ability.Category): Ability = abilities.getOrElse(category, Ability())
 
   val Levels = Map( (1 -> 0), (2, 1000), (3 -> 3000), (4 -> 6000), (5 -> 10000), (6 -> 15000), (7 -> 21000), (8 -> 28000), (9 -> 36000), (10 -> 45000),
     (11 -> 55000), (12 -> 66000), (13 -> 78000), (14 -> 91000), (15 -> 105000), (16 -> 120000), (17 -> 136000), (18 -> 153000), (19 -> 171000), (20 -> 190000))
+
+  class Class
+  private object DefaultClass extends Class
 
   class Alignment
   object Alignment {
