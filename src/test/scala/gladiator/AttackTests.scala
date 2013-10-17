@@ -1,9 +1,12 @@
 package gladiator
 
+import org.mockito.Mockito._
+
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.FunSuite
+import org.scalatest.mock.MockitoSugar
 
-class AttackTests extends FunSuite with ShouldMatchers {
+class AttackTests extends FunSuite with ShouldMatchers with MockitoSugar {
 
   test("isHit should return true if roll meets defender's armorClass") {
     val cain = Character(name = "Cain")
@@ -47,17 +50,23 @@ class AttackTests extends FunSuite with ShouldMatchers {
   }
 
   test("natural 20 always hits regardless of armor class") {
-    val attack = Attack(Character(name = "one"), Character(name = "two", armorClass = 25), 20)
+    val defenderMock = mock[Character]
+    doReturn(25).when(defenderMock).armorClass
+    val attack = Attack(Character(name = "one"), defenderMock, 20)
     attack.isHit should be (true)
   }
 
   test("minimum damage is always 1") {
-    val attack = Attack(Character(name = "one", abilities = Map(Ability.Strength -> Ability(1))), Character(name = "two", armorClass = 1), 10)
+    val defenderMock = mock[Character]
+    doReturn(1).when(defenderMock).armorClass
+    val attack = Attack(Character(name = "one", abilities = Map(Ability.Strength -> Ability(1))), defenderMock, 10)
     attack.damage should be (1)
   }
 
   test("minimum damage is always 1 even for critical") {
-    val attack = Attack(Character(name = "one", abilities = Map(Ability.Strength -> Ability(1))), Character(name = "two", armorClass = 1), 20)
+    val defenderMock = mock[Character]
+    doReturn(1).when(defenderMock).armorClass
+    val attack = Attack(Character(name = "one", abilities = Map(Ability.Strength -> Ability(1))), defenderMock, 20)
     attack.damage should be (1)
   }
 

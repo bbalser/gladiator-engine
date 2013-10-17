@@ -5,13 +5,15 @@ import gladiator.modifiers.{Modifiers, HitPointModifier}
 
 class Character(val name: String,
                 val alignment: Character.Alignment,
-                val armorClass: Int,
                 val hitPoints: Option[Int],
                 val abilities: Map[Ability.Category, Ability],
                 val experiencePoints: Int,
                 val characterClass: Character.Class) {
 
   def currentHitPoints: Int = hitPoints.getOrElse(maxHitPoints)
+
+  def armorClass: Int = 10 + ability(Ability.Dexterity).modifier +
+    Modifiers.armorClassModifiers(List(characterClass), this)
 
   def attack(defender: Character, roll: Int): (Character, Character, Attack) = {
     val attack = Attack(this, defender, roll)
@@ -52,11 +54,10 @@ class Character(val name: String,
 
   private def copy(name: String = this.name,
                    alignment: Character.Alignment = this.alignment,
-                   armorClass: Int = this.armorClass,
                    hitPoints: Int = this.currentHitPoints,
                    abilities: Map[Ability.Category, Ability] = this.abilities,
                    experiencePoints: Int = this.experiencePoints): Character = {
-    new Character(name, alignment, armorClass, Some(hitPoints), abilities, experiencePoints, this.characterClass)
+    new Character(name, alignment, Some(hitPoints), abilities, experiencePoints, this.characterClass)
   }
 
 }
@@ -65,12 +66,11 @@ object Character {
 
   def apply(name: String,
             alignment: Character.Alignment = Character.Alignment.Neutral,
-            armorClass: Int = 10,
             hitPoints: Option[Int] = None,
             abilities: Map[Ability.Category, Ability] = Map(),
             experiencePoints: Int = 0,
             characterClass: Character.Class = DefaultClass): Character = {
-    new Character(name, alignment, armorClass, hitPoints, abilities, experiencePoints, characterClass)
+    new Character(name, alignment, hitPoints, abilities, experiencePoints, characterClass)
   }
 
   val Levels = Map( (1 -> 0), (2, 1000), (3 -> 3000), (4 -> 6000), (5 -> 10000), (6 -> 15000), (7 -> 21000), (8 -> 28000), (9 -> 36000), (10 -> 45000),
@@ -78,8 +78,10 @@ object Character {
 
   abstract class Class {
     def criticalHitModifier: Int = 2
+    def defaultDamage: Int = 1
   }
-  private object DefaultClass extends Class
+  private object DefaultClass extends Class {
+  }
 
   class Alignment
   object Alignment {

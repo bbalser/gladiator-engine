@@ -14,7 +14,7 @@ class Attack(val attacker: Character, val defender: Character, val roll: Int) {
   }
 
   private def baseDamage: Int = {
-    Attack.DEFAULT_DAMAGE + attacker.ability(Ability.Strength).modifier
+    attacker.characterClass.defaultDamage + attacker.ability(Ability.Strength).modifier
   }
 
   def attackRoll: Int = {
@@ -22,8 +22,7 @@ class Attack(val attacker: Character, val defender: Character, val roll: Int) {
   }
 
   def armorClass: Int = {
-    defender.armorClass + defender.ability(Ability.Dexterity).modifier +
-      Modifiers.armorClassModifiers(List(attacker.characterClass), defender)
+    defender.armorClass + Modifiers.armorClassModifiers(List(attacker.characterClass), defender)
   }
 
 
@@ -34,8 +33,6 @@ class Attack(val attacker: Character, val defender: Character, val roll: Int) {
 }
 
 object Attack {
-
-  val DEFAULT_DAMAGE = 1
   val NATURAL_TWENTY = 20
 
   def apply(attacker: Character, defender: Character, roll: Int) = new Attack(attacker, defender, roll)
