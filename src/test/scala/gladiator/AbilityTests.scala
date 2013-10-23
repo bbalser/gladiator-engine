@@ -11,28 +11,16 @@ class AbilityTests extends FunSuite with ShouldMatchers {
     ability.score should be (10)
   }
 
-  test("ability higher than 20 should throw an exception") {
-    val thrown = intercept[IllegalArgumentException] {
-      Ability(21)
-    }
-    thrown.getMessage should be ("requirement failed: Ability can only be 1 to 20")
-  }
-
   test("ability lower than 1 should throw an exception") {
     val thrown = intercept[IllegalArgumentException] {
       Ability(0)
     }
-    thrown.getMessage should be ("requirement failed: Ability can only be 1 to 20")
+    thrown.getMessage should be ("requirement failed: Ability must be 1 or higher")
   }
 
   test("ability can be 1") {
     val ability = Ability(1)
     ability.score should be (1)
-  }
-
-  test("ability can be 20") {
-    val ability = Ability(20)
-    ability.score should be (20)
   }
 
   test("ability score can return modifier") {
@@ -42,6 +30,11 @@ class AbilityTests extends FunSuite with ShouldMatchers {
     modifiers.foreach { case (s, m) =>
       Ability(s).modifier should be (m)
     }
+  }
+
+  test("abilities should be additive") {
+    val result = Ability(5) + Ability(2)
+    result should be (Ability(7))
   }
 
 }

@@ -1,9 +1,16 @@
 package gladiator
 
 case class Ability(val score: Int = Ability.DEFAULT_SCORE) {
-  require(score > 0 && score < 21, "Ability can only be 1 to 20")
+  require(score > 0 && score < 21, "Ability must be 1 or higher")
 
   def modifier: Int = (score / 2) - 5
+
+  def +(other: Ability): Ability = {
+    Ability(score + other.score)
+  }
+
+
+
 }
 
 object Ability {

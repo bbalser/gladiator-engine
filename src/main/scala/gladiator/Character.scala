@@ -15,7 +15,7 @@ class Character(val name: String,
   def currentHitPoints: Int = hitPoints.getOrElse(maxHitPoints)
 
   def armorClass: Int = 10 + ability(Ability.Dexterity).modifier +
-    Modifiers.armorClassModifiers(List(characterClass), this)
+    Modifiers.armorClassModifiers(List(characterClass, race), this)
 
   def attack(defender: Character, roll: Int): (Character, Character, Attack) = {
     val attack = Attack(this, defender, roll)
@@ -26,7 +26,8 @@ class Character(val name: String,
     currentHitPoints > 0
   }
 
-  def ability(category: Ability.Category): Ability = abilities.getOrElse(category, Ability())
+  def ability(category: Ability.Category): Ability = Ability(abilities.getOrElse(category, Ability()).score +
+    Modifiers.abilityModifiers(List(race), category))
 
   def level: Int = ((1 + sqrt(experiencePoints/125.0 + 1.0)) / 2.0).floor.toInt.min(20)
 

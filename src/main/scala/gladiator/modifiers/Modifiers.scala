@@ -1,6 +1,6 @@
 package gladiator.modifiers
 
-import gladiator.Character
+import gladiator.{Ability, Character}
 
 object Modifiers {
 
@@ -18,6 +18,10 @@ object Modifiers {
 
   def damageModifiers(objects: List[Any], attacker: Character, defender: Character): Int = {
     sumModifiers(objects, { x: DamageModifier => x.damageModifier(attacker, defender) } )
+  }
+
+  def abilityModifiers(objects: List[Any], category: Ability.Category): Int = {
+    sumModifiers(objects, { x: AbilityModifier => x.abilityModifier(category) } )
   }
 
   def sumModifiers[T : Manifest](objects: List[Any], f: (T => Int)): Int = {
