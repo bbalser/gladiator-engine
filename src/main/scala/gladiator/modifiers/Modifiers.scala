@@ -16,6 +16,10 @@ object Modifiers {
     sumModifiers(objects, { x: ArmorClassModifier => x.armorClassModifier(defender) } )
   }
 
+  def damageModifiers(objects: List[Any], attacker: Character, defender: Character): Int = {
+    sumModifiers(objects, { x: DamageModifier => x.damageModifier(attacker, defender) } )
+  }
+
   def sumModifiers[T : Manifest](objects: List[Any], f: (T => Int)): Int = {
     objects.collect { case x: T => f(x) }.sum
   }

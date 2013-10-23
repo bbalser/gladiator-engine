@@ -77,7 +77,7 @@ object Character {
     (11 -> 55000), (12 -> 66000), (13 -> 78000), (14 -> 91000), (15 -> 105000), (16 -> 120000), (17 -> 136000), (18 -> 153000), (19 -> 171000), (20 -> 190000))
 
   abstract class Class {
-    def criticalHitModifier: Int = 2
+    def criticalHitModifier(defender: Character): Int = 2
     def defaultDamage: Int = 1
   }
   private object DefaultClass extends Class {
