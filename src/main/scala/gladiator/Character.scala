@@ -2,13 +2,15 @@ package gladiator
 
 import scala.math.sqrt
 import gladiator.modifiers.{Modifiers, HitPointModifier}
+import gladiator.races.Human
 
 class Character(val name: String,
                 val alignment: Character.Alignment,
                 val hitPoints: Option[Int],
                 val abilities: Map[Ability.Category, Ability],
                 val experiencePoints: Int,
-                val characterClass: Character.Class) {
+                val characterClass: Character.Class,
+                val race: Character.Race) {
 
   def currentHitPoints: Int = hitPoints.getOrElse(maxHitPoints)
 
@@ -57,7 +59,7 @@ class Character(val name: String,
                    hitPoints: Int = this.currentHitPoints,
                    abilities: Map[Ability.Category, Ability] = this.abilities,
                    experiencePoints: Int = this.experiencePoints): Character = {
-    new Character(name, alignment, Some(hitPoints), abilities, experiencePoints, this.characterClass)
+    new Character(name, alignment, Some(hitPoints), abilities, experiencePoints, this.characterClass, this.race)
   }
 
 }
@@ -69,8 +71,9 @@ object Character {
             hitPoints: Option[Int] = None,
             abilities: Map[Ability.Category, Ability] = Map(),
             experiencePoints: Int = 0,
-            characterClass: Character.Class = DefaultClass): Character = {
-    new Character(name, alignment, hitPoints, abilities, experiencePoints, characterClass)
+            characterClass: Character.Class = DefaultClass,
+            race: Character.Race = Human): Character = {
+    new Character(name, alignment, hitPoints, abilities, experiencePoints, characterClass, race)
   }
 
   val Levels = Map( (1 -> 0), (2, 1000), (3 -> 3000), (4 -> 6000), (5 -> 10000), (6 -> 15000), (7 -> 21000), (8 -> 28000), (9 -> 36000), (10 -> 45000),
@@ -82,6 +85,8 @@ object Character {
   }
   private object DefaultClass extends Class {
   }
+
+  abstract class Race
 
   class Alignment
   object Alignment {

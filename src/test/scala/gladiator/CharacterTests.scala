@@ -2,6 +2,7 @@ package gladiator
 
 import org.scalatest.FunSuite
 import org.scalatest.matchers.ShouldMatchers
+import gladiator.races.Human
 
 class CharacterTests extends FunSuite with ShouldMatchers {
 
@@ -128,7 +129,11 @@ class CharacterTests extends FunSuite with ShouldMatchers {
     cain.experiencePoints should be (Character.Levels(9))
     val newCain = cain.setExperiencePoints(Character.Levels(2))
     newCain.experiencePoints should be (Character.Levels(2))
+  }
 
+  test("Default Race of every character is Human") {
+    val cain = Character(name = "cain")
+    cain.race should be (Human)
   }
 
 }
