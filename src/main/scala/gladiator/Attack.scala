@@ -28,7 +28,7 @@ class Attack(val attacker: Character, val defender: Character, val roll: Int) {
 
 
   private def attackRollModifiers: Int = {
-    Modifiers.attackRollModifiers(List(attacker.characterClass), attacker, defender)
+    Modifiers.attackRollModifiers(List(attacker.characterClass, attacker.race), attacker, defender)
   }
 
 }

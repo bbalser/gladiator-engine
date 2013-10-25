@@ -44,7 +44,7 @@ class Character(val name: String,
   }
 
   private def hitPointModifiers: Int = {
-    Modifiers.hitPointModifiers(List(characterClass), this)
+    Modifiers.hitPointModifiers(List(characterClass, race), this)
   }
 
   private def applyDamage(attack: Attack): Character = {
